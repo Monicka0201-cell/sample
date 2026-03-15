@@ -1,0 +1,52 @@
+    <!DOCTYPE html>
+<html>
+<head>
+<title>Todo App</title>
+</head>
+
+<body>
+
+<h1>Todo App</h1>
+
+<input id="todoInput" placeholder="Enter todo">
+<button onclick="addTodo()" style="background-color: chartreuse;">Add</button>
+
+<ul id="todoList"></ul>
+
+<script>
+
+function loadTodos() {
+  fetch("http://localhost:5000/todos")
+    .then(res => res.json())
+    .then(data => {
+      const list = document.getElementById("todoList");
+      list.innerHTML = "";
+
+      data.forEach(todo => {
+        const li = document.createElement("li");
+        li.innerText = todo;
+        list.appendChild(li);
+      });
+    });
+}
+
+function addTodo() {
+  const input = document.getElementById("todoInput").value;
+
+  fetch("http://localhost:5000/todos", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ text: input })
+  }).then(() => {
+    loadTodos();
+  });
+}
+
+loadTodos();
+
+</script>
+
+</body>
+</html>
